@@ -1,4 +1,11 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { SaleEntity } from '../sales/sale.entity';
 
 export type ClientId = string & { __brand: 'Client' };
 
@@ -18,4 +25,7 @@ export class ClientEntity extends BaseEntity {
 
   @Column({ name: 'photo_url', type: 'varchar', nullable: true })
   photoUrl?: string;
+
+  @OneToMany(() => SaleEntity, (sale) => sale.client)
+  sales: SaleEntity[];
 }
