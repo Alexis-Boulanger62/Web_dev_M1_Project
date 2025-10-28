@@ -28,4 +28,5 @@ export class ClientEntity extends BaseEntity {
 
   @OneToMany(() => SaleEntity, (sale) => sale.client)
   sales: SaleEntity[];
+  bookCount: number;
 }
