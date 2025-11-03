@@ -3,8 +3,15 @@ import { Link, useRouterState } from '@tanstack/react-router'
 import { Route as indexRoute } from './routes/index'
 import { Route as aboutRoute } from './routes/about'
 import { Route as booksRoute } from './routes/books'
+import { Route as clientsRoute } from './routes/clients'
+
 import { Space, Menu, Breadcrumb, type MenuProps } from 'antd'
-import { BookOutlined, HomeOutlined, InfoOutlined } from '@ant-design/icons'
+import {
+  BookOutlined,
+  HomeOutlined,
+  InfoOutlined,
+  UserOutlined,
+} from '@ant-design/icons'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -25,6 +32,11 @@ export function Layout({ children }: LayoutProps) {
       label: <Link to={booksRoute.to}>Books</Link>,
       key: 'books',
       icon: <BookOutlined />,
+    },
+    {
+      label: <Link to={clientsRoute.to}>Clients</Link>,
+      key: 'clients',
+      icon: <UserOutlined />,
     },
     {
       label: <Link to={aboutRoute.to}>About</Link>,
@@ -73,8 +85,8 @@ export function Layout({ children }: LayoutProps) {
             path.startsWith('/books')
               ? 'books'
               : path.startsWith('/about')
-              ? 'about'
-              : 'home',
+                ? 'about'
+                : 'home',
           ]}
           items={items}
         />
