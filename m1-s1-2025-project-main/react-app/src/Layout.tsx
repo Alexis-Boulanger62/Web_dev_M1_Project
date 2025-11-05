@@ -4,12 +4,14 @@ import { Route as indexRoute } from './routes/index'
 import { Route as aboutRoute } from './routes/about'
 import { Route as booksRoute } from './routes/books'
 import { Route as clientsRoute } from './routes/clients'
+import { Route as salesRoute } from './routes/sales'
 
 import { Space, Menu, Breadcrumb, type MenuProps } from 'antd'
 import {
   BookOutlined,
   HomeOutlined,
   InfoOutlined,
+  ShoppingCartOutlined,
   UserOutlined,
 } from '@ant-design/icons'
 
@@ -42,6 +44,11 @@ export function Layout({ children }: LayoutProps) {
       label: <Link to={aboutRoute.to}>About</Link>,
       key: 'about',
       icon: <InfoOutlined />,
+    },
+    {
+      label: <Link to={salesRoute.to}>Sales</Link>,
+      key: 'about',
+      icon: <ShoppingCartOutlined />,
     },
   ]
 
