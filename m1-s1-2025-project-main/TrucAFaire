@@ -1,0 +1,3 @@
+-générer un UUID pour le AuthorID et non pas un timeStamp
+-relier les différentes fonctionnalités exemple si je crée un book avec un nouveau autheur celui-ci est directement ajouté dans la page autheur
+-et je sais pas
