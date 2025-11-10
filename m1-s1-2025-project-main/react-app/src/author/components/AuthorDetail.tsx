@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { useParams } from '@tanstack/react-router'
 import { useAuthorDetailProvider } from '../providers/authorprovider'
 import type { UpdateAuthorModel } from '../authormodel'
 import { Input, Button } from 'antd'
@@ -10,8 +9,7 @@ interface AuthorDetailProps {
 }
 
 export function AuthorDetail({ id: propId }: AuthorDetailProps) {
-  const params = useParams({ strict: false })
-  const authorId = propId || (params as any).authorId 
+  const authorId = propId
   
   if (!authorId) return <div>ID manquant</div>
   
