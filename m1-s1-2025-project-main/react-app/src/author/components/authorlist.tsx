@@ -1,19 +1,29 @@
-import React from "react";
-import type { AuthorModel as Author } from "../authormodel";
-import { AuthorCard } from "./authorcard";
+import { useEffect } from 'react'
+import { useAuthorProvider } from '../providers/authorprovider'
+import { AuthorListItem } from './AuthorListItem.tsx'
+import { CreateAuthorModal } from './CreateAuthorModal'
 
-type Props = {
-  authors: Author[];
-  onDelete: (id: string) => void;
-};
+export function AuthorList() {
+  const { authors, loadAuthors, deleteAuthor, updateAuthor, createAuthor } =
+    useAuthorProvider()
 
-export const AuthorList: React.FC<Props> = ({ authors, onDelete }) => {
-  if (authors.length === 0) return <div>Aucun auteur.</div>;
+  useEffect(() => {
+    loadAuthors()
+  }, [])
+
   return (
-    <div style={{ display: "grid", gap: 8 }}>
-      {authors.map(a => (
-        <AuthorCard key={a.id} author={a} onDelete={onDelete} />
-      ))}
-    </div>
-  );
-};
+    <>
+      <CreateAuthorModal onCreate={createAuthor} />
+      <div style={{ padding: '0 .5rem' }}>
+        {authors.map(author => (
+          <AuthorListItem
+            key={author.id}
+            author={author}
+            onDelete={deleteAuthor}
+            onUpdate={updateAuthor}
+          />
+        ))}
+      </div>
+    </>
+  )
+}

@@ -19,7 +19,7 @@ import { Route as BooksIndexRouteImport } from './routes/books/index'
 import { Route as AuthorsIndexRouteImport } from './routes/authors/index'
 import { Route as ClientsClientIdRouteImport } from './routes/clients.$clientId'
 import { Route as BooksBookIdRouteImport } from './routes/books.$bookId'
-import { Route as AuthorsAuthorIdRouteImport } from './routes/authors/$authorId'
+import { Route as AuthorsAuthorIdRouteImport } from './routes/authors.$authorId'
 
 const ClientsRoute = ClientsRouteImport.update({
   id: '/clients',

@@ -1,30 +1,57 @@
-import React, { useState } from "react";
+import { useState } from 'react'
+import { Button, Modal, Input } from 'antd'
+import { PlusOutlined } from '@ant-design/icons'
+import type { CreateAuthorModel } from '../authormodel'
 
-type Props = {
-  open: boolean;
-  onClose: () => void;
-  onCreate: (payload: { name: string; bio?: string }) => Promise<void>;
-};
+interface CreateAuthorModelProps {
+  onCreate: (payload: CreateAuthorModel) => void
+}
 
-export const CreateAuthorModal: React.FC<Props> = ({ open, onClose, onCreate }) => {
-  const [name, setName] = useState("");
-  const [bio, setBio] = useState("");
-  if (!open) return null;
+export function CreateAuthorModal({ onCreate }: CreateAuthorModelProps) {
+  const [open, setOpen] = useState(false)
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [photoUrl, setPhotoUrl] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  const handleCreate = async () => {
+    if (!firstName.trim() || !lastName.trim()) return
+    setLoading(true)
+    try {
+      await onCreate({
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        photoUrl: photoUrl.trim() || undefined,
+      })
+      setFirstName('')
+      setLastName('')
+      setPhotoUrl('')
+      setOpen(false)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
-    <div style={{ position: "fixed", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.3)" }}>
-      <div style={{ background: "white", padding: 20, borderRadius: 6, width: 420 }}>
-        <h3>Créer un auteur</h3>
-        <div style={{ display: "grid", gap: 8 }}>
-          <input placeholder="Nom" value={name} onChange={e => setName(e.target.value)} />
-          <textarea placeholder="Bio (optionnel)" value={bio} onChange={e => setBio(e.target.value)} />
-          <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
-            <button onClick={onClose}>Annuler</button>
-            <button onClick={async () => { if (!name.trim()) return; await onCreate({ name: name.trim(), bio: bio.trim() || undefined }); setName(""); setBio(""); onClose(); }} style={{ background: "#2b8a3e", color: "white", border: "none", padding: "6px 10px", borderRadius: 4 }}>
-              Créer
-            </button>
-          </div>
+    <>
+      <Button type="primary" icon={<PlusOutlined />} onClick={() => setOpen(true)} style={{ marginBottom: 16 }}>
+        Créer un auteur
+      </Button>
+      <Modal
+        title="Créer un auteur"
+        open={open}
+        onOk={handleCreate}
+        onCancel={() => setOpen(false)}
+        confirmLoading={loading}
+        okText="Créer"
+        cancelText="Annuler"
+      >
+        <div style={{ display: 'grid', gap: 8 }}>
+          <Input placeholder="Prénom" value={firstName} onChange={e => setFirstName(e.target.value)} />
+          <Input placeholder="Nom" value={lastName} onChange={e => setLastName(e.target.value)} />
+          <Input placeholder="Photo URL (optionnel)" value={photoUrl} onChange={e => setPhotoUrl(e.target.value)} />
         </div>
-      </div>
-    </div>
-  );
-};
+      </Modal>
+    </>
+  )
+}

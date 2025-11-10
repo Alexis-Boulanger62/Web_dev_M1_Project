@@ -1,13 +1,15 @@
 export type AuthorModel = {
   id: string;
-  name: string;
-  bio?: string;
-  booksCount: number;
+  firstName: string;
+  lastName: string;
+  photoUrl?: string | null;
+  booksCount?: number;
 };
 
 export type CreateAuthorModel = {
-  name: string;
-  bio?: string;
+  firstName: string;
+  lastName: string;
+  photoUrl?: string | null;
 };
 
 export type UpdateAuthorModel = Partial<CreateAuthorModel>;
