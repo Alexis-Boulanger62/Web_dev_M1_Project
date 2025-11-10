@@ -38,6 +38,12 @@ export class AuthorRepository {
   }
   public async findOne(id: string): Promise<AuthorModel | null> {
     const authorId: AuthorId = id as AuthorId;
-    return this.authorRepository.findOneBy({ id: authorId });
+    const author = await this.authorRepository.findOne({
+      where: { id: authorId },
+      relations: ['books'],
+    });
+
+    if (!author) return null;
+    return { ...author, bookCount: author.books?.length || 0 };
   }
 }

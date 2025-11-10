@@ -22,6 +22,7 @@ function AuthorDetailContent({ id }: { id: string }) {
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [photoUrl, setPhotoUrl] = useState('')
+  const [bookCount, setBookCount] = useState(0)
 
   useEffect(() => {
     loadAuthor()
@@ -32,6 +33,7 @@ function AuthorDetailContent({ id }: { id: string }) {
       setFirstName(author.firstName)
       setLastName(author.lastName)
       setPhotoUrl(author.photoUrl ?? '')
+      setBookCount(author.bookCount)
     }
   }, [author])
 
@@ -46,9 +48,9 @@ function AuthorDetailContent({ id }: { id: string }) {
 
   const onValidateEdit = () => {
     const input: UpdateAuthorModel = {
-      firstName: firstName.trim(),
-      lastName: lastName.trim(),
-      photoUrl: photoUrl.trim() || undefined,
+      firstName: firstName,
+      lastName: lastName,
+      photoUrl: photoUrl || undefined,
     }
     updateAuthor(input)
     setIsEditing(false)
@@ -91,10 +93,7 @@ function AuthorDetailContent({ id }: { id: string }) {
           <strong>
             {author.firstName} {author.lastName}
           </strong>
-          <div style={{ fontSize: 13, color: '#666' }}>
-            {author.bookCount ?? 0} livre(s) — Ventes moyennes:{' '}
-            {author.averageSales.toFixed(2)}
-          </div>
+          <div style={{ fontSize: 13, color: '#666' }}>{bookCount} livres</div>
           {author.photoUrl && (
             <div style={{ marginTop: 8 }}>
               <img

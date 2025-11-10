@@ -6,7 +6,6 @@ import type {
 } from '../authormodel'
 import type { AuthorDetailModel } from '../AuthorDetailModel'
 import axios from 'axios'
-import type { BookModel } from '../../books/BookModel'
 
 export const useAuthorProvider = () => {
   const [authors, setAuthors] = useState<AuthorModel[]>([])
@@ -48,47 +47,10 @@ export const useAuthorDetailProvider = (authorId: string) => {
   const [author, setAuthor] = useState<AuthorDetailModel | null>(null)
 
   const loadAuthor = () => {
-    Promise.all([
-      axios.get(`http://localhost:3000/authors/${authorId}`),
-      axios.get(`http://localhost:3000/books`),
-    ])
-      .then(([authorRes, booksRes]) => {
-        const authorData: AuthorModel = authorRes.data
-        const allBooks: BookModel[] = Array.isArray(booksRes.data)
-          ? booksRes.data
-          : []
-
-        console.log('Author data:', authorData)
-        console.log('All books:', allBooks)
-
-        // Filtre les livres de cet auteur
-        const authorBooks = allBooks.filter(b => {
-          const bookAuthorId = b.author?.id
-          console.log(
-            `Book ${b.title}: authorId =`,
-            bookAuthorId,
-            'searching for',
-            authorId,
-          )
-          return bookAuthorId === authorId
-        })
-
-        console.log('Filtered books for author:', authorBooks)
-
-        const averageSales =
-          authorBooks.length > 0
-            ? authorBooks.reduce(
-                (sum, b) => sum + (Number(b.salesCount) || 0),
-                0,
-              ) / authorBooks.length
-            : 0
-
-        setAuthor({
-          ...authorData,
-          books: authorBooks,
-          averageSales,
-          bookCount: authorBooks.length,
-        })
+    axios
+      .get(`http://localhost:3000/authors/${authorId}`)
+      .then(res => {
+        setAuthor(res.data)
       })
       .catch(err => {
         console.error('Error loading author detail:', err)
