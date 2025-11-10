@@ -13,7 +13,7 @@ export const useAuthorProvider = () => {
 
   const loadAuthors = () => {
     axios
-      .get('http://localhost:3000/authors')
+      .get<AuthorModel[]>('http://localhost:3000/authors')
       .then(res => {
         setAuthors(res.data)
       })
@@ -54,34 +54,44 @@ export const useAuthorDetailProvider = (authorId: string) => {
     ])
       .then(([authorRes, booksRes]) => {
         const authorData: AuthorModel = authorRes.data
-        const allBooks: BookModel[] = Array.isArray(booksRes.data) ? booksRes.data : [] // <-- SÉCURISÉ
-        
+        const allBooks: BookModel[] = Array.isArray(booksRes.data)
+          ? booksRes.data
+          : []
+
         console.log('Author data:', authorData)
         console.log('All books:', allBooks)
-        
+
         // Filtre les livres de cet auteur
         const authorBooks = allBooks.filter(b => {
-          const bookAuthorId = b.author?.id || (b as any).authorId
-          console.log(`Book ${b.title}: authorId =`, bookAuthorId, 'searching for', authorId)
+          const bookAuthorId = b.author?.id
+          console.log(
+            `Book ${b.title}: authorId =`,
+            bookAuthorId,
+            'searching for',
+            authorId,
+          )
           return bookAuthorId === authorId
         })
-        
+
         console.log('Filtered books for author:', authorBooks)
-        
-        const averageSales = authorBooks.length > 0
-          ? authorBooks.reduce((sum, b) => sum + (Number(b.salesCount) || 0), 0) / authorBooks.length
-          : 0
+
+        const averageSales =
+          authorBooks.length > 0
+            ? authorBooks.reduce(
+                (sum, b) => sum + (Number(b.salesCount) || 0),
+                0,
+              ) / authorBooks.length
+            : 0
 
         setAuthor({
           ...authorData,
-          books: authorBooks, // <-- TOUJOURS un tableau
+          books: authorBooks,
           averageSales,
-          booksCount: authorBooks.length
+          bookCount: authorBooks.length,
         })
       })
       .catch(err => {
         console.error('Error loading author detail:', err)
-        // En cas d'erreur, initialise avec un tableau vide
         setAuthor(null)
       })
   }

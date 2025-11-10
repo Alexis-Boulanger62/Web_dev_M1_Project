@@ -4,16 +4,29 @@ import { AuthorEntity } from './author.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AuthorId } from './author.entity';
+import { BookEntity } from '../books/entities/book.entity';
 
 @Injectable()
 export class AuthorRepository {
   constructor(
     @InjectRepository(AuthorEntity)
     private readonly authorRepository: Repository<AuthorEntity>,
+    @InjectRepository(BookEntity)
+    private readonly bookRepository: Repository<BookEntity>,
   ) {}
 
   public async getAllAuthors(): Promise<AuthorModel[]> {
-    return this.authorRepository.find();
+    const authors = await this.authorRepository.find();
+    const authorsWithCount = await Promise.all(
+      authors.map(async (author) => {
+        const count = await this.bookRepository.count({
+          where: { author: { id: author.id } },
+        });
+        return { ...author, bookCount: count };
+      }),
+    );
+
+    return authorsWithCount;
   }
 
   public async createAuthor(author: CreateAuthorModel): Promise<AuthorModel> {
@@ -24,7 +37,7 @@ export class AuthorRepository {
     await this.authorRepository.delete(id);
   }
   public async findOne(id: string): Promise<AuthorModel | null> {
-    const authorId: AuthorId = id as AuthorId; 
+    const authorId: AuthorId = id as AuthorId;
     return this.authorRepository.findOneBy({ id: authorId });
   }
 }

@@ -5,14 +5,14 @@ import { Input, Button } from 'antd'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 
 interface AuthorDetailProps {
-  id?: string 
+  id?: string
 }
 
 export function AuthorDetail({ id: propId }: AuthorDetailProps) {
   const authorId = propId
-  
+
   if (!authorId) return <div>ID manquant</div>
-  
+
   return <AuthorDetailContent id={authorId} />
 }
 
@@ -25,7 +25,6 @@ function AuthorDetailContent({ id }: { id: string }) {
 
   useEffect(() => {
     loadAuthor()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -79,7 +78,11 @@ function AuthorDetailContent({ id }: { id: string }) {
             onChange={e => setPhotoUrl(e.target.value)}
           />
           <div style={{ display: 'flex', gap: 8 }}>
-            <Button type="primary" icon={<CheckOutlined />} onClick={onValidateEdit} />
+            <Button
+              type="primary"
+              icon={<CheckOutlined />}
+              onClick={onValidateEdit}
+            />
             <Button icon={<CloseOutlined />} onClick={onCancelEdit} />
           </div>
         </div>
@@ -89,7 +92,8 @@ function AuthorDetailContent({ id }: { id: string }) {
             {author.firstName} {author.lastName}
           </strong>
           <div style={{ fontSize: 13, color: '#666' }}>
-            {author.booksCount ?? 0} livre(s) — Ventes moyennes: {author.averageSales.toFixed(2)}
+            {author.bookCount ?? 0} livre(s) — Ventes moyennes:{' '}
+            {author.averageSales.toFixed(2)}
           </div>
           {author.photoUrl && (
             <div style={{ marginTop: 8 }}>
@@ -114,7 +118,8 @@ function AuthorDetailContent({ id }: { id: string }) {
       <ul style={{ paddingLeft: 16 }}>
         {author.books?.map(b => (
           <li key={b.id}>
-            <a href={`/books/${b.id}`}>{b.title}</a> — {b.yearPublished} — ventes: {b.salesCount ?? 0}
+            <a href={`/books/${b.id}`}>{b.title}</a> — {b.yearPublished} —
+            ventes: {b.salesCount ?? 0}
           </li>
         ))}
         {(!author.books || author.books.length === 0) && <li>Aucun livre.</li>}

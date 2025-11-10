@@ -34,7 +34,12 @@ export function CreateAuthorModal({ onCreate }: CreateAuthorModelProps) {
 
   return (
     <>
-      <Button type="primary" icon={<PlusOutlined />} onClick={() => setOpen(true)} style={{ marginBottom: 16 }}>
+      <Button
+        type="primary"
+        icon={<PlusOutlined />}
+        onClick={() => setOpen(true)}
+        style={{ marginBottom: 16 }}
+      >
         Créer un auteur
       </Button>
       <Modal
@@ -47,9 +52,21 @@ export function CreateAuthorModal({ onCreate }: CreateAuthorModelProps) {
         cancelText="Annuler"
       >
         <div style={{ display: 'grid', gap: 8 }}>
-          <Input placeholder="Prénom" value={firstName} onChange={e => setFirstName(e.target.value)} />
-          <Input placeholder="Nom" value={lastName} onChange={e => setLastName(e.target.value)} />
-          <Input placeholder="Photo URL (optionnel)" value={photoUrl} onChange={e => setPhotoUrl(e.target.value)} />
+          <Input
+            placeholder="Prénom"
+            value={firstName}
+            onChange={e => setFirstName(e.target.value)}
+          />
+          <Input
+            placeholder="Nom"
+            value={lastName}
+            onChange={e => setLastName(e.target.value)}
+          />
+          <Input
+            placeholder="Photo URL (optionnel)"
+            value={photoUrl}
+            onChange={e => setPhotoUrl(e.target.value)}
+          />
         </div>
       </Modal>
     </>

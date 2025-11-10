@@ -1,10 +1,10 @@
 import { Outlet } from '@tanstack/react-router'
-import { AuthorList } from '../components/authorlist'
+import { Authorlist } from '../components/Authorlist.tsx'
 
 export function AuthorsPage() {
   return (
     <div>
-      <AuthorList />
+      <Authorlist />
       <Outlet />
     </div>
   )

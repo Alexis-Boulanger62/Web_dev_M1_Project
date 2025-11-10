@@ -3,7 +3,7 @@ import { useAuthorProvider } from '../providers/authorprovider'
 import { AuthorListItem } from './AuthorListItem.tsx'
 import { CreateAuthorModal } from './CreateAuthorModal'
 
-export function AuthorList() {
+export function Authorlist() {
   const { authors, loadAuthors, deleteAuthor, updateAuthor, createAuthor } =
     useAuthorProvider()
 

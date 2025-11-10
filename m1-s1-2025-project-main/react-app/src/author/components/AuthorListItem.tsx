@@ -13,29 +13,44 @@ interface AuthorListItemProps {
 export function AuthorListItem({ author, onDelete }: AuthorListItemProps) {
   const [isDeleting, setIsDeleting] = useState(false)
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     setIsDeleting(true)
-    await onDelete(author.id)
+    onDelete(author.id)
     setIsDeleting(false)
   }
 
   return (
-    <div style={{ 
-      border: '1px solid #ddd', 
-      padding: 12, 
-      borderRadius: 6, 
-      display: 'flex', 
-      justifyContent: 'space-between', 
-      alignItems: 'center', 
-      marginBottom: 8
-    }}>
-      <Link to="/authors/$authorId" params={{ authorId: author.id }} style={{ textDecoration: 'none', color: 'inherit', flex: 1 }}>
+    <div
+      style={{
+        border: '1px solid #ddd',
+        padding: 12,
+        borderRadius: 6,
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 8,
+      }}
+    >
+      <Link
+        to="/authors/$authorId"
+        params={{ authorId: author.id }}
+        style={{ textDecoration: 'none', color: 'inherit', flex: 1 }}
+      >
         <div>
-          <strong>{author.firstName} {author.lastName}</strong>
-          <div style={{ fontSize: 13, color: '#666' }}>{author.booksCount ?? 0} livre(s)</div>
+          <strong>
+            {author.firstName} {author.lastName}
+          </strong>
+          <div style={{ fontSize: 13, color: '#666' }}>
+            {author.bookCount} livre(s)
+          </div>
         </div>
       </Link>
-      <Popconfirm title="Supprimer l'auteur ?" onConfirm={handleDelete} okText="Oui" cancelText="Non">
+      <Popconfirm
+        title="Supprimer l'auteur ?"
+        onConfirm={handleDelete}
+        okText="Oui"
+        cancelText="Non"
+      >
         <Button danger icon={<DeleteOutlined />} loading={isDeleting} />
       </Popconfirm>
     </div>
