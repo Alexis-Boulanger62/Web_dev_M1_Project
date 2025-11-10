@@ -5,7 +5,7 @@ import { Route as aboutRoute } from './routes/about'
 import { Route as booksRoute } from './routes/books'
 import { Route as clientsRoute } from './routes/clients'
 import { Route as salesRoute } from './routes/sales'
-
+import { Route as authorsRoute } from './routes/authors/index'
 import { Space, Menu, Breadcrumb, type MenuProps } from 'antd'
 import {
   BookOutlined,
@@ -46,8 +46,13 @@ export function Layout({ children }: LayoutProps) {
       icon: <InfoOutlined />,
     },
     {
+      label: <Link to={authorsRoute.to}>Authors</Link>,
+      key: 'authors',
+      icon: <UserOutlined />,
+    },
+    {
       label: <Link to={salesRoute.to}>Sales</Link>,
-      key: 'about',
+      key: 'sales',
       icon: <ShoppingCartOutlined />,
     },
   ]
@@ -110,3 +115,5 @@ export function Layout({ children }: LayoutProps) {
     </Space>
   )
 }
+
+export default Layout

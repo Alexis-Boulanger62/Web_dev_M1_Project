@@ -13,4 +13,11 @@ export class AuthorService {
   public async createAuthor(author: CreateAuthorModel): Promise<AuthorModel> {
     return this.authorRepository.createAuthor(author);
   }
+
+  public async delete(id: string): Promise<void> {
+    return this.authorRepository.deleteAuthor(id);
+  }
+  public async findOne(id: string): Promise<AuthorModel | null> {
+    return this.authorRepository.findOne(id);
+  }
 }

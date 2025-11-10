@@ -35,4 +35,7 @@ export class BookEntity extends BaseEntity {
 
   @OneToMany(() => SaleEntity, (sale) => sale.book)
   sales: SaleEntity[];
+
+  @Column({ default: 0 })
+  salesCount: number;
 }
