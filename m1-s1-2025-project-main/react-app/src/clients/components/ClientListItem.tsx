@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { ClientModel, UpdateClientModel } from '../ClientModel'
-import { Button, Col, Row, Modal } from 'antd'
+import { Button, Col, Row, Modal, Popconfirm } from 'antd'
 import {
   CheckOutlined,
   CloseOutlined,
@@ -76,7 +76,7 @@ export function ClientListItem({
         )}
       </Col>
       <Col span={8} style={{ margin: 'auto 0' }}>
-        {client.salesCount} books purchased
+        {client.bookCount} livres achetés
       </Col>
       <Col
         span={6}
@@ -101,9 +101,14 @@ export function ClientListItem({
             <EditOutlined />
           </Button>
         )}
-        <Button type="primary" danger onClick={confirmDelete}>
-          <DeleteOutlined />
-        </Button>
+        <Popconfirm
+          title="Supprimer l'auteur ?"
+          onConfirm={confirmDelete}
+          okText="Oui"
+          cancelText="Non"
+        >
+          <Button danger icon={<DeleteOutlined />} />
+        </Popconfirm>
       </Col>
     </Row>
   )

@@ -4,6 +4,7 @@ import { Button, Table, Input } from 'antd'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
 import { useClientDetailProvider } from '../providers/useClientDetailProvider.tsx'
+import dayjs from 'dayjs'
 
 interface ClientDetailProps {
   id: string
@@ -119,6 +120,7 @@ export function ClientDetail({ id }: ClientDetailProps) {
           {
             title: 'Purchase Date',
             dataIndex: 'purchaseDate',
+            render: (date: string) => dayjs(date).format('YYYY-MM-DD'),
           },
         ]}
       />

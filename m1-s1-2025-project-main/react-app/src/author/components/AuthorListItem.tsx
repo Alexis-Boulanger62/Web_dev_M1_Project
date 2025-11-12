@@ -41,7 +41,7 @@ export function AuthorListItem({ author, onDelete }: AuthorListItemProps) {
             {author.firstName} {author.lastName}
           </strong>
           <div style={{ fontSize: 13, color: '#666' }}>
-            {author.bookCount} livre(s)
+            {author.bookCount} livres
           </div>
         </div>
       </Link>

@@ -59,9 +59,12 @@ export function BookListItem({ book, onDelete, onUpdate }: BookListItemProps) {
           </Link>
         )}
       </Col>
-      <Col span={9} style={{ margin: 'auto 0' }}>
+      <Col span={6} style={{ margin: 'auto 0' }}>
         by <span style={{ fontWeight: 'bold' }}>{book.author.firstName}</span>{' '}
         <span style={{ fontWeight: 'bold' }}>{book.author.lastName}</span>
+      </Col>
+      <Col span={3} style={{ margin: 'auto 0' }}>
+        {book.salesCount} livres vendus
       </Col>
       <Col
         span={3}
