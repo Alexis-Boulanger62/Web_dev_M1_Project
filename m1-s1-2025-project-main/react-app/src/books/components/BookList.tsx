@@ -14,7 +14,7 @@ export function BookList() {
   return (
     <>
       <CreateBookModal onCreate={createBook} />
-      <div style={{ padding: '0 .5rem' }}>
+      <div style={{ padding: '0 .5rem', color: '#1890ff' }}>
         {books.map(book => (
           <BookListItem
             key={book.id}

@@ -4,7 +4,7 @@ export type ClientModel = {
   firstName: string
   email?: string
   photoUrl?: string
-  bookCount: number // nombre de livres achetés
+  bookCount: number 
 }
 
 export type CreateClientModel = {
