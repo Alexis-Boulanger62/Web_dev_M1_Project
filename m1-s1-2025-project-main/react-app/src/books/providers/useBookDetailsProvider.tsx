@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import type { BookModel } from '../BookModel'
+import type { BookDetailModel } from '../BookDetailModel.tsx'
 
 export const useBookDetailsProvider = (id: string) => {
   const [isLoading, setIsLoading] = useState(false)
-  const [book, setBook] = useState<BookModel | null>(null)
+  const [book, setBook] = useState<BookDetailModel | null>(null)
 
   const loadBook = () => {
     setIsLoading(true)

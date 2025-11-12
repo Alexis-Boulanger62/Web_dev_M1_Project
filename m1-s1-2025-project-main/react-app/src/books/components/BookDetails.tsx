@@ -1,4 +1,4 @@
-import { Skeleton, Space, Typography } from 'antd'
+import { Skeleton, Space, Table, Typography } from 'antd'
 import { useBookDetailsProvider } from '../providers/useBookDetailsProvider'
 import { useEffect } from 'react'
 import { ArrowLeftOutlined } from '@ant-design/icons'
@@ -16,7 +16,7 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
     loadBook()
   }, [id])
 
-  if (isLoading) {
+  if (isLoading || !book) {
     return <Skeleton active />
   }
 
@@ -27,6 +27,26 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
       </Link>
       <Typography.Title level={1}>{book?.title}</Typography.Title>
       <Typography.Title level={3}>{book?.yearPublished}</Typography.Title>
+      <Typography.Title level={3}>
+        By {book?.author.firstName} {book?.author.lastName}
+      </Typography.Title>
+      <h3>Client List</h3>
+      <Table
+        dataSource={book.sales}
+        rowKey="id"
+        pagination={false}
+        columns={[
+          {
+            title: 'Client',
+            render: (_, record) =>
+              `${record.client.firstName} ${record.client.name}`,
+          },
+          {
+            title: 'Purchase Date',
+            dataIndex: 'purchaseDate',
+          },
+        ]}
+      />
     </Space>
   )
 }

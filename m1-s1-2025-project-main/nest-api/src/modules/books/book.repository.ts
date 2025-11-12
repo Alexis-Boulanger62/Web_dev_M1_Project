@@ -26,12 +26,11 @@ export class BookRepository {
     const [books, totalCount] = await this.bookRepository.findAndCount({
       take: input?.limit,
       skip: input?.offset,
-      relations: ['author', 'sales'], 
+      relations: ['author', 'sales'],
       order: input?.sort,
     });
 
-    
-    const mappedBooks = books.map(book => this.mapToModel(book));
+    const mappedBooks = books.map((book) => this.mapToModel(book));
 
     return [mappedBooks, totalCount];
   }
@@ -39,14 +38,14 @@ export class BookRepository {
   public async getBookById(id: string): Promise<BookModel | undefined> {
     const book = await this.bookRepository.findOne({
       where: { id: id as BookId },
-      relations: ['author', 'sales'], 
+      relations: ['author', 'sales', 'sales.client'],
     });
 
     if (!book) {
       return undefined;
     }
 
-    return this.mapToModel(book);
+    return book;
   }
 
   public async createBook(book: CreateBookModel): Promise<BookModel> {
@@ -59,10 +58,9 @@ export class BookRepository {
     }
 
     const savedBook = await this.bookRepository.save(
-      this.bookRepository.create(book)
+      this.bookRepository.create(book),
     );
 
-    
     const createdBook = await this.getBookById(savedBook.id);
     if (!createdBook) {
       throw new Error('Failed to retrieve created book');
@@ -84,7 +82,6 @@ export class BookRepository {
 
     await this.bookRepository.update(id, book);
 
-    
     return this.getBookById(id);
   }
 
@@ -100,24 +97,20 @@ export class BookRepository {
     });
   }
 
-  
   private mapToModel(book: BookEntity): BookModel {
-    
     const salesCount = book.sales?.length || 0;
 
     return {
       id: book.id,
       title: book.title,
       yearPublished: book.yearPublished,
-      salesCount, 
-      
-      
-      author:  {
+      salesCount,
+
+      author: {
         id: book.author.id,
         firstName: book.author.firstName,
         lastName: book.author.lastName,
-        
-      } 
+      },
     };
   }
 }

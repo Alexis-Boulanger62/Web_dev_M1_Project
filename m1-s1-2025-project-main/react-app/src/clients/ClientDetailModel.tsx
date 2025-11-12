@@ -1,3 +1,5 @@
+import type { SaleModel } from '../sales/SaleModel.tsx'
+
 export type ClientDetailModel = {
   id: string
   name: string
@@ -5,19 +7,6 @@ export type ClientDetailModel = {
   email?: string
   photoUrl?: string
   sales: SaleModel[]
-}
-
-export type SaleModel = {
-  id: string
-  purchaseDate: string
-  book: {
-    id: string
-    title: string
-    author: {
-      firstName: string
-      lastName: string
-    }
-  }
 }
 
 export type UpdateClientModel = {
