@@ -1,8 +1,10 @@
 import { AuthorId } from '../authors/author.entity';
 
 export type BookAuthorModel = {
+  id: string;
   firstName: string;
   lastName: string;
+  photoUrl?: string;
 };
 
 export type BookModel = {
@@ -10,6 +12,8 @@ export type BookModel = {
   title: string;
   author: BookAuthorModel;
   yearPublished: number;
+  salesCount: number;
+  
 };
 
 export type CreateBookModel = {

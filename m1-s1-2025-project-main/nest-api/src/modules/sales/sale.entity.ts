@@ -22,14 +22,14 @@ export class SaleEntity extends BaseEntity {
   @Column({ name: 'client_id', type: 'uuid' })
   clientId: ClientId;
 
-  @ManyToOne(() => ClientEntity, { onDelete: 'CASCADE' })
+  @ManyToOne(() => ClientEntity, (client) => client.sales,{ onDelete: 'CASCADE' })
   @JoinColumn({ name: 'client_id' })
   client: ClientEntity;
 
   @Column({ name: 'book_id', type: 'uuid' })
   bookId: BookId;
 
-  @ManyToOne(() => BookEntity, { onDelete: 'CASCADE' })
+  @ManyToOne(() => BookEntity,(book) => book.sales, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'book_id' })
   book: BookEntity;
 }
