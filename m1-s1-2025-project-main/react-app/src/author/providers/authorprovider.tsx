@@ -60,18 +60,23 @@ export const useAuthorDetailProvider = (authorId: string) => {
         console.log('Author ID:', authorId)
         console.log('All books:', allBooks)
 
-        
-        const authorBooks = allBooks.filter((b) => {
-          const bookAuthorId = b.author?.id 
-          console.log(`Book "${b.title}": authorId=${bookAuthorId}, salesCount=${b.salesCount}`)
+        const authorBooks = allBooks.filter(b => {
+          const bookAuthorId = b.author?.id
+          console.log(
+            `Book "${b.title}": authorId=${bookAuthorId}, salesCount=${b.salesCount}`,
+          )
           return bookAuthorId === authorId
         })
 
         console.log('Filtered books for author:', authorBooks)
 
-        const averageSales = authorBooks.length > 0
-          ? authorBooks.reduce((sum, b) => sum + (Number(b.salesCount) || 0), 0) / authorBooks.length
-          : 0
+        const averageSales =
+          authorBooks.length > 0
+            ? authorBooks.reduce(
+                (sum, b) => sum + (Number(b.salesCount) || 0),
+                0,
+              ) / authorBooks.length
+            : 0
 
         console.log('Average sales:', averageSales)
 
