@@ -26,34 +26,27 @@ export class BookRepository {
     const [books, totalCount] = await this.bookRepository.findAndCount({
       take: input?.limit,
       skip: input?.offset,
-      relations: { author: true },
+      relations: ['author', 'sales'], 
       order: input?.sort,
     });
 
-    return [books, totalCount];
+    
+    const mappedBooks = books.map(book => this.mapToModel(book));
+
+    return [mappedBooks, totalCount];
   }
 
   public async getBookById(id: string): Promise<BookModel | undefined> {
     const book = await this.bookRepository.findOne({
       where: { id: id as BookId },
+      relations: ['author', 'sales'], 
     });
 
     if (!book) {
       return undefined;
     }
 
-    const author = await this.authorRepository.findOne({
-      where: { id: book.authorId },
-    });
-
-    if (!author) {
-      return undefined;
-    }
-
-    return {
-      ...book,
-      author,
-    };
+    return this.mapToModel(book);
   }
 
   public async createBook(book: CreateBookModel): Promise<BookModel> {
@@ -65,7 +58,16 @@ export class BookRepository {
       throw new Error('Author not found');
     }
 
-    return this.bookRepository.save(this.bookRepository.create(book));
+    const savedBook = await this.bookRepository.save(
+      this.bookRepository.create(book)
+    );
+
+    
+    const createdBook = await this.getBookById(savedBook.id);
+    if (!createdBook) {
+      throw new Error('Failed to retrieve created book');
+    }
+    return createdBook;
   }
 
   public async updateBook(
@@ -81,6 +83,9 @@ export class BookRepository {
     }
 
     await this.bookRepository.update(id, book);
+
+    
+    return this.getBookById(id);
   }
 
   public async deleteBook(id: string): Promise<void> {
@@ -93,5 +98,26 @@ export class BookRepository {
         ids.map((id) => transactionalEntityManager.delete(BookEntity, { id })),
       );
     });
+  }
+
+  
+  private mapToModel(book: BookEntity): BookModel {
+    
+    const salesCount = book.sales?.length || 0;
+
+    return {
+      id: book.id,
+      title: book.title,
+      yearPublished: book.yearPublished,
+      salesCount, 
+      
+      
+      author:  {
+        id: book.author.id,
+        firstName: book.author.firstName,
+        lastName: book.author.lastName,
+        
+      } 
+    };
   }
 }

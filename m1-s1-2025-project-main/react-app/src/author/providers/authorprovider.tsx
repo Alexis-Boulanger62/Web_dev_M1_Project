@@ -6,14 +6,16 @@ import type {
 } from '../authormodel'
 import type { AuthorDetailModel } from '../AuthorDetailModel'
 import axios from 'axios'
+import type { BookModel } from '../../books/BookModel'
 
 export const useAuthorProvider = () => {
   const [authors, setAuthors] = useState<AuthorModel[]>([])
 
   const loadAuthors = () => {
     axios
-      .get<AuthorModel[]>('http://localhost:3000/authors')
+      .get('http://localhost:3000/authors')
       .then(res => {
+        console.log('Loaded authors:', res.data)
         setAuthors(res.data)
       })
       .catch(err => console.error(err))
@@ -47,10 +49,38 @@ export const useAuthorDetailProvider = (authorId: string) => {
   const [author, setAuthor] = useState<AuthorDetailModel | null>(null)
 
   const loadAuthor = () => {
-    axios
-      .get(`http://localhost:3000/authors/${authorId}`)
-      .then(res => {
-        setAuthor(res.data)
+    Promise.all([
+      axios.get(`http://localhost:3000/authors/${authorId}`),
+      axios.get(`http://localhost:3000/books`),
+    ])
+      .then(([authorRes, booksRes]) => {
+        const authorData: AuthorModel = authorRes.data
+        const allBooks: BookModel[] = booksRes.data.data || booksRes.data // <-- CORRIGÉ: gère {data: [...], totalCount}
+
+        console.log('Author ID:', authorId)
+        console.log('All books:', allBooks)
+
+        
+        const authorBooks = allBooks.filter((b) => {
+          const bookAuthorId = b.author?.id 
+          console.log(`Book "${b.title}": authorId=${bookAuthorId}, salesCount=${b.salesCount}`)
+          return bookAuthorId === authorId
+        })
+
+        console.log('Filtered books for author:', authorBooks)
+
+        const averageSales = authorBooks.length > 0
+          ? authorBooks.reduce((sum, b) => sum + (Number(b.salesCount) || 0), 0) / authorBooks.length
+          : 0
+
+        console.log('Average sales:', averageSales)
+
+        setAuthor({
+          ...authorData,
+          books: authorBooks,
+          averageSales,
+          booksCount: authorData.bookCount,
+        })
       })
       .catch(err => {
         console.error('Error loading author detail:', err)
