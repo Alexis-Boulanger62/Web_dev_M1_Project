@@ -101,9 +101,6 @@ export const SaleList = () => {
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
         onOk={handleAddSale}
-        okButtonProps={{
-          disabled: !selectedClientId || !selectedBookId || !selectedDate,
-        }}
       >
         <Space direction="vertical" style={{ width: '100%' }}>
           <Select

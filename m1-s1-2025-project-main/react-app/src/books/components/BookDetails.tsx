@@ -1,9 +1,11 @@
-import { Skeleton, Space, Table, Typography } from 'antd'
+import { Button, Skeleton, Space, Table, Typography } from 'antd'
 import { useBookDetailsProvider } from '../providers/useBookDetailsProvider'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { Link } from '@tanstack/react-router'
 import { Route as booksRoute } from '../../routes/books'
+import { AddSaleModal } from './CreateSaleModal.tsx'
+import dayjs from 'dayjs'
 
 interface BookDetailsProps {
   id: string
@@ -11,6 +13,7 @@ interface BookDetailsProps {
 
 export const BookDetails = ({ id }: BookDetailsProps) => {
   const { isLoading, book, loadBook } = useBookDetailsProvider(id)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
     loadBook()
@@ -30,6 +33,18 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
       <Typography.Title level={3}>
         By {book?.author.firstName} {book?.author.lastName}
       </Typography.Title>
+      <Space direction="vertical" style={{ textAlign: 'left', width: '95%' }}>
+        <Button type="primary" onClick={() => setIsModalOpen(true)}>
+          Add Sale
+        </Button>
+
+        <AddSaleModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          bookId={id}
+          onSaleAdded={loadBook}
+        />
+      </Space>
       <h3>Client List</h3>
       <Table
         dataSource={book.sales}
@@ -44,6 +59,7 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
           {
             title: 'Purchase Date',
             dataIndex: 'purchaseDate',
+            render: (date: string) => dayjs(date).format('YYYY-MM-DD'),
           },
         ]}
       />
