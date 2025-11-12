@@ -98,7 +98,13 @@ export function Layout({ children }: LayoutProps) {
               ? 'books'
               : path.startsWith('/about')
                 ? 'about'
-                : 'home',
+                : path.startsWith('/clients')
+                  ? 'clients'
+                  : path.startsWith('/authors')
+                    ? 'authors'
+                    : path.startsWith('/sales')
+                      ? 'sales'
+                      : 'home',
           ]}
           items={items}
         />
