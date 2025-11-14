@@ -45,7 +45,7 @@ export const BookDetails = ({ id }: BookDetailsProps) => {
           onSaleAdded={loadBook}
         />
       </Space>
-      <h3>Client List</h3>
+      <h3 style={{ color: '#1890ff' }}>Client List</h3>
       <Table
         dataSource={book.sales}
         rowKey="id"

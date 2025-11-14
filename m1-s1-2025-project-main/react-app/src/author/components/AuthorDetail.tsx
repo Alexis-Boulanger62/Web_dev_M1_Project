@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useParams } from '@tanstack/react-router'
 import { useAuthorDetailProvider } from '../providers/authorprovider'
 import type { UpdateAuthorModel } from '../authormodel'
 import { Input, Button } from 'antd'
@@ -9,9 +10,10 @@ interface AuthorDetailProps {
 }
 
 export function AuthorDetail({ id: propId }: AuthorDetailProps) {
-  const authorId = propId
+  const params = useParams({ strict: false })
+  const authorId = propId || (params as any).authorId
 
-  if (!authorId) return <div>ID manquant</div>
+  if (!authorId) return <div style={{ color: '#1890ff' }}>ID manquant</div>
 
   return <AuthorDetailContent id={authorId} />
 }
@@ -22,10 +24,10 @@ function AuthorDetailContent({ id }: { id: string }) {
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [photoUrl, setPhotoUrl] = useState('')
-  const [bookCount, setBookCount] = useState(0)
 
   useEffect(() => {
     loadAuthor()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -33,7 +35,6 @@ function AuthorDetailContent({ id }: { id: string }) {
       setFirstName(author.firstName)
       setLastName(author.lastName)
       setPhotoUrl(author.photoUrl ?? '')
-      setBookCount(author.bookCount)
     }
   }, [author])
 
@@ -48,18 +49,20 @@ function AuthorDetailContent({ id }: { id: string }) {
 
   const onValidateEdit = () => {
     const input: UpdateAuthorModel = {
-      firstName: firstName,
-      lastName: lastName,
-      photoUrl: photoUrl || undefined,
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
+      photoUrl: photoUrl.trim() || undefined,
     }
     updateAuthor(input)
     setIsEditing(false)
   }
 
-  if (!author) return <div>Chargement...</div>
+  if (!author) return <div style={{ color: '#1890ff' }}>Chargement...</div>
+
+  const books = Array.isArray(author.books) ? author.books : []
 
   return (
-    <div style={{ padding: '1rem' }}>
+    <div style={{ padding: '1rem', color: '#1890ff' }}>
       <h2>Détail Auteur</h2>
 
       {isEditing ? (
@@ -90,22 +93,50 @@ function AuthorDetailContent({ id }: { id: string }) {
         </div>
       ) : (
         <div style={{ marginBottom: '1rem' }}>
-          <strong>
+          <strong style={{ fontSize: 18 }}>
             {author.firstName} {author.lastName}
           </strong>
-          <div style={{ fontSize: 13, color: '#666' }}>{bookCount} livres</div>
+
+          <div
+            style={{
+              marginTop: 8,
+              padding: 12,
+              backgroundColor: '#f5f5f5',
+              borderRadius: 4,
+              display: 'grid',
+              gap: 8,
+            }}
+          >
+            <div style={{ fontSize: 14 }}>
+               <strong>Nombre de livres:</strong> {author.booksCount ?? 0}
+            </div>
+            <div style={{ fontSize: 14 }}>
+               <strong>Ventes moyennes par livre:</strong>{' '}
+              {author.averageSales.toFixed(2)}
+            </div>
+            <div style={{ fontSize: 14 }}>
+               <strong>Total des ventes:</strong>{' '}
+              {books.reduce((sum, b) => sum + (b.salesCount || 0), 0)}
+            </div>
+          </div>
+
           {author.photoUrl && (
-            <div style={{ marginTop: 8 }}>
+            <div style={{ marginTop: 12 }}>
               <img
                 src={author.photoUrl}
                 alt={`${author.firstName} ${author.lastName}`}
-                style={{ maxWidth: 160, borderRadius: 4 }}
+                style={{
+                  maxWidth: 200,
+                  borderRadius: 8,
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                }}
               />
             </div>
           )}
+
           <Button
             type="primary"
-            style={{ marginTop: 8 }}
+            style={{ marginTop: 12 }}
             onClick={() => setIsEditing(true)}
           >
             Éditer
@@ -113,16 +144,39 @@ function AuthorDetailContent({ id }: { id: string }) {
         </div>
       )}
 
-      <h3>Livres publiés</h3>
-      <ul style={{ paddingLeft: 16 }}>
-        {author.books?.map(b => (
-          <li key={b.id}>
-            <a href={`/books/${b.id}`}>{b.title}</a> — {b.yearPublished} —
-            ventes: {b.salesCount ?? 0}
-          </li>
-        ))}
-        {(!author.books || author.books.length === 0) && <li>Aucun livre.</li>}
-      </ul>
+      <h3 style={{ marginTop: 24 }}>Livres publiés</h3>
+      {books.length > 0 ? (
+        <div style={{ display: 'grid', gap: 8 }}>
+          {books.map(b => (
+            <div
+              key={b.id}
+              style={{
+                padding: 12,
+                border: '1px solid #d9d9d9',
+                borderRadius: 4,
+                backgroundColor: '#fafafa',
+              }}
+            >
+              <div style={{ fontWeight: 600, marginBottom: 4 }}>
+                <a
+                  href={`/books/${b.id}`}
+                  style={{ color: '#1890ff' }}
+                >
+                  {b.title}
+                </a>
+              </div>
+              <div style={{ fontSize: 13, color: '#1890ff' }}>
+                 Publié en {b.yearPublished} •
+                 Ventes: <strong>{b.salesCount ?? 0}</strong>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div style={{ padding: 12, color: '#1890ff', fontStyle: 'italic' }}>
+          Aucun livre publié
+        </div>
+      )}
     </div>
   )
 }
