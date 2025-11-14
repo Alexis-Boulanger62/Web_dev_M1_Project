@@ -18,10 +18,10 @@ export function CreateAuthorModal({ onCreate }: CreateAuthorModelProps) {
     if (!firstName.trim() || !lastName.trim()) return
     setLoading(true)
     try {
-      await onCreate({
-        firstName: firstName.trim(),
-        lastName: lastName.trim(),
-        photoUrl: photoUrl.trim() || undefined,
+      onCreate({
+        firstName: firstName,
+        lastName: lastName,
+        photoUrl: photoUrl || undefined,
       })
       setFirstName('')
       setLastName('')
