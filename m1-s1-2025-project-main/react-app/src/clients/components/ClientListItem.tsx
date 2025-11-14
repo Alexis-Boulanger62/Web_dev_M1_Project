@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { ClientModel, UpdateClientModel } from '../ClientModel'
-import { Button, Col, Row, Modal, Popconfirm } from 'antd'
+import { Button, Col, Row, Popconfirm } from 'antd'
 import {
   CheckOutlined,
   CloseOutlined,
@@ -23,6 +23,7 @@ export function ClientListItem({
   const [name, setName] = useState(client.name)
   const [firstName, setFirstName] = useState(client.firstName)
   const [isEditing, setIsEditing] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   const onCancelEdit = () => {
     setIsEditing(false)
@@ -35,14 +36,10 @@ export function ClientListItem({
     setIsEditing(false)
   }
 
-  const confirmDelete = () => {
-    Modal.confirm({
-      title: 'Delete Client',
-      content: 'Are you sure you want to delete this client?',
-      okText: 'Yes',
-      cancelText: 'No',
-      onOk: () => onDelete(client.id),
-    })
+  const handleDelete = () => {
+    setIsDeleting(true)
+    onDelete(client.id)
+    setIsDeleting(false)
   }
 
   return (
@@ -103,11 +100,11 @@ export function ClientListItem({
         )}
         <Popconfirm
           title="Supprimer l'auteur ?"
-          onConfirm={confirmDelete}
+          onConfirm={handleDelete}
           okText="Oui"
           cancelText="Non"
         >
-          <Button danger icon={<DeleteOutlined />} />
+          <Button danger icon={<DeleteOutlined />} loading={isDeleting} />
         </Popconfirm>
       </Col>
     </Row>
